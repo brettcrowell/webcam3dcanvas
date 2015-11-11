@@ -50,17 +50,14 @@ function imageLoaded(){
     for (var y = 0; y < canvasHeight; ++y) {
       for (var x = 0; x < canvasWidth; ++x) {
 
+        // indexes for rgb based on offset in array
         var r = (y * canvasWidth + x) * 4;
         var g = red + 1;
         var b = red + 2;
 
-        // take the red pixel from the left eye and place it on the right image
-        //rightImageData.data[red] = leftImageData.data[red];
-        //leftImageData.data[red] = rightImageData.data[red];
-        
-        finalImageData.data[r] = leftImageData[red];
-        finalImageData.data[g] = rightImageData[green]
-        finalImageData.data[b] = rightImageData[blue]
+        finalImageData.data[r] = leftImageData[r];
+        finalImageData.data[g] = rightImageData[g]
+        finalImageData.data[b] = rightImageData[b]
 
       }
     }
