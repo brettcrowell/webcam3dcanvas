@@ -1,0 +1,15 @@
+{
+  "name": "redvblue",
+  "version": "0.0.0",
+  "description": "Double Webcam 3D Viewer",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bower": "^1.6.5",
+    "express": "^4.13.3"
+  }
+}
