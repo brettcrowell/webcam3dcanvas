@@ -44,22 +44,28 @@ function imageLoaded(){
 
     var leftImageData = getImageData(leftImage);
     var rightImageData = getImageData(rightImage);
+    
+    var finalImageData = ctx.createImageData(canvasWidth, canvasHeight);
 
     for (var y = 0; y < canvasHeight; ++y) {
       for (var x = 0; x < canvasWidth; ++x) {
 
-        var red = (y * canvasWidth + x) * 4;
-        var green = red + 1;
-        var blue = red + 2;
+        var r = (y * canvasWidth + x) * 4;
+        var g = red + 1;
+        var b = red + 2;
 
         // take the red pixel from the left eye and place it on the right image
-        rightImageData.data[red] = leftImageData.data[red];
+        //rightImageData.data[red] = leftImageData.data[red];
         //leftImageData.data[red] = rightImageData.data[red];
+        
+        finalImageData.data[r] = leftImageData[red];
+        finalImageData.data[g] = rightImageData[green]
+        finalImageData.data[b] = rightImageData[blue]
 
       }
     }
 
-    ctx.putImageData(rightImageData, 0, 0);
+    ctx.putImageData(finalImageData, 0, 0);
 
     document.body.appendChild(canvas);
 
