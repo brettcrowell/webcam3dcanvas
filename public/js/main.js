@@ -1,3 +1,29 @@
+function byKind(kind){
+  return function(value){
+    return value.kind === kind;
+  }
+}
+
+if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+  console.log("enumerateDevices() not supported.");
+}
+
+// List cameras and microphones.
+
+var cameras = [];
+
+navigator.mediaDevices.enumerateDevices()
+  .then(function(devices) {
+    var videoDevices = devices.filter(byKind("videoinput"));
+    videoDevices.forEach(function(device) {
+      cameras.push(new WebcamSource(device.deviceId));
+    });
+  })
+  .catch(function(err) {
+    console.log(err.name + ": " + error.message);
+  });
+
+
 var canvasWidth = 640;
 var canvasHeight = 480;
 
@@ -71,3 +97,10 @@ function imageLoaded(){
   }
 
 }
+
+setInterval(function(){
+  if(cameras[1]){
+    console.log('drawing frame');
+    ctx.putImageData(cameras[1].getImageData(), 0, 0);
+  }
+}, 500);
