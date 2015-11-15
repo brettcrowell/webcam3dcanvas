@@ -1,4 +1,4 @@
-WebcamSource = function(){
+WebcamSource = function(videoDeviceId){
 
     this.options = {
 
@@ -12,6 +12,7 @@ WebcamSource = function(){
     this.options.height = (1 / this.options.aspectRatio) * this.options.width;
 
     this.video = document.createElement('video');
+    this.video.autoplay = true;
 
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
@@ -20,50 +21,41 @@ WebcamSource = function(){
 
     this.localMediaStream = null;
 
-    if (!Halftone.Util.hasGetUserMedia()) {
-        alert('getUserMedia() is not supported in your browser');
-    }
-
     // http://www.html5rocks.com/en/tutorials/getusermedia/intro/
+    // https://github.com/webrtc/samples/blob/gh-pages/src/content/devices/input-output/js/main.js
 
-    // Not showing vendor prefixes.
-    getUserMedia(this.options, this.startVideo.bind(this), this.errorCallback, this.video);
+    var constraints = {
+        video: {deviceId: videoDeviceId ? {exact: videoDeviceId} : undefined}
+    };
+
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then(this.startVideo.bind(this))
+      .catch(this.errorCallback.bind(this));
 
 };
 
-Halftone.WebcamSource.prototype = {
+WebcamSource.prototype = {
 
     errorCallback: function(e) {
         alert('Reeeejected!', e);
     },
 
     startVideo: function(stream) {
-
-        this.localMediaStream = stream;
-
-        this.video.autoplay = true;
-        this.video.src = window.URL.createObjectURL(this.localMediaStream);
-
-        // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
-        // See crbug.com/110938.
-        this.video.onloadedmetadata = function(e) {
-            console.log(e);
-        };
-
+        this.video.srcObject = stream;
     },
 
     /**
      *
      * @param video
      * @param canvasContext
-     * @returns {CanvasPixelArray}
+     * @returns {ImageData}
      */
 
-    getFrame: function(){
+    getImageData: function(){
 
         this.context.drawImage(this.video, 0, 0, this.options.width, this.options.height);
 
-        return this.context.getImageData(0, 0, this.options.width, this.options.height).data;
+        return this.context.getImageData(0, 0, this.options.width, this.options.height);
 
     }
 
